@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script src="js/jquery.min.js"></script>
+    <script src="js/moment.min.js"></script>
+
+    <link rel="stylesheet" href="css/fullcalendar.min.css">
+    <script src="js/fullcalendar.min.js"></script>
+    <script src="js/es.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"></script>
+
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col"></div>
+            <div class="col-10"><div id="CalendarioPHP"></div></div>
+            <div class="col"></div>
+        </div>
+    </div>
+
+<script>
+    $(document).ready(function() {
+        $('#CalendarioPHP').fullCalendar({
+            header:{
+                left: 'today,prev,next,Miboton',
+                center: 'title',
+                right: 'month,basicWeek,basicDay,agendaWeek,agendaDay'
+            },
+
+            customButtons:{
+                Miboton:{
+                    text: "Boton 1",
+                    click: function(){
+                        alert("Accion del boton");
+                    }
+                }
+            },
+
+            dayClick: function(date,jsEvent,view){
+                $("#ModalEventos").modal();
+                $('#txtFecha').val(date.formart());
+            },
+
+            events:[
+              {
+                title:'Evento 1',
+                descripcion:"descripcion",
+                start:'2022-06-22',
+                color:"#FF0F0",
+                textColor:"FFFFFF"
+              },
+              {
+                title:'Evento 2',
+                descripcion:"descripcion 2",
+                start:'2022-06-25',
+                end:'2022-06-27',
+              },
+              {
+                title:'Evento 3',
+                descripcion:"descripcion 3",
+                start:'2022-06-20T12:30:00',
+                color:"#FFF000",
+                textColor:"000000",
+                allDay:false
+              }
+            ],
+
+            eventClick:function(calEvent,jsEvent,view){
+
+              //h2
+              $('#tituloEvento').html(calEvent.title);
+
+              //mostrar la informacion del evento en los inputs
+              $('#txtDescripcion').html(calEvent.descripcion);
+              $('#txtID').val(calEvent.id);
+              $('#txtTitulo').val(calEvent.title);
+              $('#txtColor').val(calEvent.color);
+
+              FechaHora= calEvent.start._i.split(" ");
+              $('#txtFecha').val(FechaHora[0]);
+              $('#txtHora').val(FechaHora[1]);
+
+              $("#exampleModal").modal();
+            }
+        });
+    });
+</script>
+
+  <!-- Modal -->
+  <div class="modal fade" id="ModalEventos" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="tituloEvento"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div id="descripcionEvento"></div>
+            Id:<input type="text" id="txtID" name="txtID"
+            Fecha: <input type="text" id="txtFecha" name="txtFecha"/><br>
+            Titulo: <input type="text" id="txtTitulo" name="txtTitulo"/><br>
+            Hora: <input type="text" id="txtHora" name="txtHora"/><br>
+            Descripcion: <textarea type="text" id="txtDescripcion" name="txtFecha"></textarea>/><br>
+            <label for="exampleFormControlSelect2">Empleados: </label>
+            <select multiple class="form-control" id="txtEmpleados">
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+            </select>
+            Color: <input type="color" value="#ff0000" id="txtColor" name="txtColor"/><br>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" id="btnAgregar" class="btn btn-success">Agregar</button>
+          <button type="button" class="btn btn-secondary">Modificar</button>
+          <button type="button" class="btn btn-danger">Borrar</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<script>
+  $('#btnAgregar').click(function(){
+    $('#CalendarioPHP').fullCalendar('renderEvent',NuevoEvento);
+    $("#ModalEventos").modal('toggle');
+
+  });
+
+  function RecolectarDatosGUI(){
+    NuevoEvento={
+      title:$('#txtTitulo').val(),
+      start:$('#txtFecha').val()+" "+$('#txtHora').val(),
+      color:$('#txtColor').val(),
+      descripcion:$('#txtDescripcion').val(),
+      empleados:$('#txtTitulo').val(),
+      textColor:"#FFFFFF"
+    };
+  }
+</script>
+</body>
+</html>
